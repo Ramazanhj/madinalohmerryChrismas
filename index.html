@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Christmas Wonderland 🎄</title>
+
+<style>
+*{box-sizing:border-box}
+
+body{
+ margin:0;
+ overflow:hidden;
+ color:white;
+ text-align:center;
+ font-family:Arial,sans-serif;
+ background:linear-gradient(#071526,#102c3c 65%,#dcecf0);
+}
+
+h1{
+ margin:22px 10px 5px;
+ font-size:clamp(28px,6vw,48px);
+ color:#fff5d1;
+ text-shadow:0 0 15px #b9eaff;
+}
+
+.subtitle{
+ color:#d2eaf2;
+ margin-bottom:10px;
+}
+
+/* ТАЙМЕР */
+
+.countdown{
+ position:relative;
+ z-index:10;
+ width:min(92%,420px);
+ margin:12px auto;
+ padding:13px 10px;
+ border:1px solid rgba(190,235,255,.5);
+ border-radius:18px;
+ background:rgba(8,32,48,.75);
+ box-shadow:0 0 20px rgba(90,200,255,.2);
+}
+
+.countdown-title{
+ color:#ffe9ae;
+ font-size:16px;
+ margin-bottom:12px;
+}
+
+.timer{
+ display:flex;
+ justify-content:center;
+ gap:clamp(12px,5vw,28px);
+}
+
+.timer div{
+ display:flex;
+ flex-direction:column;
+ gap:5px;
+}
+
+.timer span{
+ font-size:clamp(25px,7vw,38px);
+ font-weight:bold;
+ color:white;
+ text-shadow:0 0 12px #79dfff;
+ font-variant-numeric:tabular-nums;
+}
+
+.timer small{
+ color:#c8e8f5;
+ font-size:11px;
+}
+
+/* СЦЕНА */
+
+.scene{
+ height:55vh;
+ position:relative;
+ display:flex;
+ justify-content:center;
+ align-items:center;
+}
+
+.forest{
+ position:absolute;
+ bottom:20px;
+ width:100%;
+ height:220px;
+ display:flex;
+ justify-content:space-around;
+ align-items:end;
+ opacity:.8;
+}
+
+.pine{
+ width:0;
+ height:0;
+ border-left:55px solid transparent;
+ border-right:55px solid transparent;
+ border-bottom:180px solid #092b2c;
+ filter:drop-shadow(0 0 8px #173f39);
+}
+
+.pine:nth-child(even){
+ transform:scale(.7);
+ border-bottom-color:#123d38;
+}
+
+/* ЁЛКА */
+
+.tree{
+ position:relative;
+ width:250px;
+ height:340px;
+ z-index:2;
+ image-rendering:pixelated;
+ animation:sway 5s ease-in-out infinite;
+}
+
+.star{
+ position:absolute;
+ top:0;
+ left:50%;
+ transform:translateX(-50%);
+ color:#ffe77a;
+ font-size:42px;
+ text-shadow:0 0 20px gold;
+ animation:glow 1.5s infinite alternate;
+}
+
+.branch{
+ position:absolute;
+ left:50%;
+ transform:translateX(-50%);
+ background:#087b50;
+ clip-path:polygon(50% 0,100% 100%,0 100%);
+ filter:drop-shadow(0 0 5px #0a8057);
+}
+
+.b1{top:42px;width:100px;height:95px}
+.b2{top:100px;width:160px;height:115px}
+.b3{top:170px;width:225px;height:135px}
+
+.trunk{
+ position:absolute;
+ top:285px;
+ left:108px;
+ width:35px;
+ height:50px;
+ background:#704323;
+}
+
+/* ПОДАРКИ */
+
+.gift{
+ position:absolute;
+ bottom:20px;
+ width:42px;
+ height:38px;
+ background:#c83245;
+ border:3px solid #ffe28a;
+ z-index:4;
+}
+
+.gift:before{
+ content:"";
+ position:absolute;
+ left:16px;
+ top:0;
+ height:100%;
+ width:6px;
+ background:#ffe28a;
+}
+
+.g1{left:calc(50% - 110px)}
+.g2{left:calc(50% + 65px);background:#247cbd}
+
+/* ГИРЛЯНДЫ */
+
+.light{
+ position:absolute;
+ width:10px;
+ height:10px;
+ border-radius:50%;
+ box-shadow:0 0 13px currentColor;
+ animation:blink .8s infinite alternate;
+}
+
+/* СНЕГ */
+
+.snow{
+ position:fixed;
+ top:-20px;
+ color:white;
+ pointer-events:none;
+ animation:fall linear infinite;
+ z-index:5;
+}
+
+.ground{
+ position:absolute;
+ bottom:0;
+ width:100%;
+ height:35px;
+ background:#e9f5f5;
+ border-radius:50% 50% 0 0;
+}
+
+/* МУЗЫКА */
+
+.controls{
+ position:relative;
+ z-index:10;
+ display:flex;
+ justify-content:center;
+ flex-wrap:wrap;
+ gap:12px;
+ padding:5px 12px;
+}
+
+button{
+ padding:13px 22px;
+ border:1px solid #bcefff;
+ border-radius:30px;
+ background:rgba(13,48,65,.9);
+ color:white;
+ font-size:15px;
+ cursor:pointer;
+ box-shadow:0 0 14px #4bc9d5;
+}
+
+button:active{
+ transform:scale(.96);
+}
+
+#status{
+ position:relative;
+ z-index:10;
+ font-size:13px;
+ color:#d5edf5;
+ margin:12px;
+}
+
+/* САЛЮТЫ */
+
+canvas{
+ position:fixed;
+ inset:0;
+ pointer-events:none;
+ z-index:8;
+}
+
+/* АНИМАЦИИ */
+
+@keyframes fall{
+ to{transform:translateY(110vh) translateX(40px)}
+}
+
+@keyframes blink{
+ from{opacity:.3}
+ to{opacity:1}
+}
+
+@keyframes glow{
+ from{text-shadow:0 0 5px gold}
+ to{text-shadow:0 0 25px gold}
+}
+
+@keyframes sway{
+ 0%,100%{transform:rotate(-1deg)}
+ 50%{transform:rotate(1deg)}
+}
+
+@media(max-width:500px){
+ .scene{height:53vh}
+ .tree{transform:scale(.85)}
+ .controls{gap:8px}
+ button{padding:12px 15px;font-size:14px}
+ .countdown{margin:8px auto}
+}
+</style>
+</head>
+
+<body>
+
+<h1>🎄 Merry Christmas 🎄</h1>
+
+<div class="subtitle">
+ Добро пожаловать в зимнюю сказку ✨
+</div>
+
+<!-- ТАЙМЕР -->
+
+<div class="countdown">
+ <div class="countdown-title">
+  ✨ До Нового года осталось ✨
+ </div>
+
+ <div class="timer">
+  <div>
+   <span id="days">00</span>
+   <small>Дней</small>
+  </div>
+
+  <div>
+   <span id="hours">00</span>
+   <small>Часов</small>
+  </div>
+
+  <div>
+   <span id="minutes">00</span>
+   <small>Минут</small>
+  </div>
+
+  <div>
+   <span id="seconds">00</span>
+   <small>Секунд</small>
+  </div>
+ </div>
+</div>
+
+<!-- ЗИМНИЙ ЛЕС И ЁЛКА -->
+
+<div class="scene">
+
+ <div class="forest">
+  <div class="pine"></div>
+  <div class="pine"></div>
+  <div class="pine"></div>
+  <div class="pine"></div>
+  <div class="pine"></div>
+ </div>
+
+ <div class="tree">
+  <div class="star">★</div>
+  <div class="branch b1"></div>
+  <div class="branch b2"></div>
+  <div class="branch b3"></div>
+  <div class="trunk"></div>
+ </div>
+
+ <div class="gift g1"></div>
+ <div class="gift g2"></div>
+ <div class="ground"></div>
+
+</div>
+
+<!-- МУЗЫКАЛЬНЫЕ КНОПКИ -->
+
+<div class="controls">
+ <button id="lastBtn">▶ Last Christmas</button>
+ <button id="dynBtn">▶ Династия</button>
+</div>
+
+<div id="status">Выбери музыку 🎵</div>
+
+<!-- MP3 ФАЙЛЫ -->
+
+<audio id="lastMusic"
+ src="last_christmas.mp3"
+ preload="auto"
+ loop></audio>
+
+<audio id="dynMusic"
+ src="3md.mp3"
+ preload="auto"
+ loop></audio>
+
+<canvas id="fireworks"></canvas>
+
+<script>
+
+// ==========================
+// ГИРЛЯНДЫ
+// ==========================
+
+const tree=document.querySelector('.tree');
+
+const colors=[
+ '#ff5252',
+ '#ffe66d',
+ '#55dfff',
+ '#ff7ce5',
+ '#ffffff'
+];
+
+for(let i=0;i<40;i++){
+
+ const light=document.createElement('div');
+
+ light.className='light';
+
+ light.style.left=(25+Math.random()*50)+'%';
+ light.style.top=(20+Math.random()*75)+'%';
+
+ light.style.background=colors[i%colors.length];
+ light.style.color=colors[i%colors.length];
+
+ light.style.animationDelay=Math.random()+'s';
+
+ tree.appendChild(light);
+}
+
+// ==========================
+// СНЕГОПАД
+// ==========================
+
+for(let i=0;i<120;i++){
+
+ const s=document.createElement('div');
+
+ s.className='snow';
+ s.textContent='❄';
+
+ s.style.left=Math.random()*100+'%';
+ s.style.fontSize=(8+Math.random()*16)+'px';
+ s.style.opacity=.3+Math.random()*.7;
+
+ s.style.animationDuration=(5+Math.random()*12)+'s';
+ s.style.animationDelay=(-Math.random()*15)+'s';
+
+ document.body.appendChild(s);
+}
+
+// ==========================
+// МУЗЫКА
+// ==========================
+
+const lastMusic=document.getElementById('lastMusic');
+const dynMusic=document.getElementById('dynMusic');
+
+const lastBtn=document.getElementById('lastBtn');
+const dynBtn=document.getElementById('dynBtn');
+
+const status=document.getElementById('status');
+
+async function playTrack(
+ track,button,other,otherButton,name
+){
+
+ if(!track.paused){
+
+  track.pause();
+
+  button.textContent='▶ '+name;
+  status.textContent='Музыка остановлена';
+
+  return;
+ }
+
+ other.pause();
+ other.currentTime=0;
+
+ otherButton.textContent=
+  other===lastMusic
+  ?'▶ Last Christmas'
+  :'▶ Династия';
+
+ try{
+
+  track.volume=.7;
+
+  await track.play();
+
+  button.textContent='Ⅱ '+name;
+
+  status.textContent='♪ Сейчас играет: '+name;
+
+ }catch(e){
+
+  status.textContent=
+   'Не удалось открыть музыку. Проверь MP3-файл.';
+
+ }
+}
+
+lastBtn.addEventListener('click',()=>playTrack(
+ lastMusic,lastBtn,dynMusic,dynBtn,'Last Christmas'
+));
+
+dynBtn.addEventListener('click',()=>playTrack(
+ dynMusic,dynBtn,lastMusic,lastBtn,'Династия'
+));
+
+lastMusic.addEventListener('error',()=>{
+ status.textContent='Не найден last_christmas.mp3';
+});
+
+dynMusic.addEventListener('error',()=>{
+ status.textContent='Не найден 3md.mp3';
+});
+
+// ==========================
+// ТАЙМЕР ДО НОВОГО ГОДА
+// ==========================
+
+function updateCountdown(){
+
+ const now=new Date();
+
+ // Текущее время по Астане
+ const astanaParts=new Intl.DateTimeFormat('en-US',{
+  timeZone:'Asia/Almaty',
+  year:'numeric'
+ }).formatToParts(now);
+
+ const year=Number(
+  astanaParts.find(p=>p.type==='year').value
+ );
+
+ // Следующий Новый год — полночь 1 января
+ const target=new Date(
+  `${year+1}-01-01T00:00:00+05:00`
+ );
+
+ let diff=Math.max(0,target.getTime()-now.getTime());
+
+ const days=Math.floor(diff/86400000);
+ const hours=Math.floor(diff%86400000/3600000);
+ const minutes=Math.floor(diff%3600000/60000);
+ const seconds=Math.floor(diff%60000/1000);
+
+ document.getElementById('days').textContent=
+  String(days).padStart(2,'0');
+
+ document.getElementById('hours').textContent=
+  String(hours).padStart(2,'0');
+
+ document.getElementById('minutes').textContent=
+  String(minutes).padStart(2,'0');
+
+ document.getElementById('seconds').textContent=
+  String(seconds).padStart(2,'0');
+}
+
+updateCountdown();
+setInterval(updateCountdown,1000);
+
+// ==========================
+// САЛЮТЫ
+// ==========================
+
+const canvas=document.getElementById('fireworks');
+const ctx=canvas.getContext('2d');
+
+function resize(){
+
+ canvas.width=innerWidth;
+ canvas.height=innerHeight;
+
+}
+
+resize();
+
+addEventListener('resize',resize);
+
+let particles=[];
+
+function explode(x,y){
+
+ for(let i=0;i<75;i++){
+
+  const a=Math.random()*Math.PI*2;
+  const speed=1+Math.random()*5;
+
+  particles.push({
+
+   x,y,
+
+   vx:Math.cos(a)*speed,
+   vy:Math.sin(a)*speed,
+
+   life:1,
+
+   color:`hsl(${Math.random()*360},100%,65%)`
+
+  });
+
+ }
+
+}
+
+function animate(){
+
+ ctx.clearRect(
+  0,0,canvas.width,canvas.height
+ );
+
+ particles=particles.filter(p=>p.life>0);
+
+ for(const p of particles){
+
+  p.x+=p.vx;
+  p.y+=p.vy;
+
+  p.vy+=.025;
+  p.life-=.012;
+
+  ctx.globalAlpha=p.life;
+  ctx.fillStyle=p.color;
+
+  ctx.fillRect(p.x,p.y,4,4);
+
+ }
+
+ ctx.globalAlpha=1;
+
+ requestAnimationFrame(animate);
+
+}
+
+animate();
+
+setInterval(()=>{
+
+ explode(
+  40+Math.random()*(innerWidth-80),
+  60+Math.random()*(innerHeight*.4)
+ );
+
+},1400);
+
+canvas.addEventListener('click',e=>{
+ explode(e.clientX,e.clientY);
+});
+
+</script>
+
+</body>
+</html>
